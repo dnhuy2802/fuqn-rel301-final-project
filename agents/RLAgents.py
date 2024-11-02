@@ -213,7 +213,7 @@ class DQN(nn.Module):
 
 class DeepQLearningAgent(Agent):
     def __init__(self, state_size=12, epsilon=1.0, epsilon_min=0.01,
-                 epsilon_decay=0.995, gamma=0.99, learning_rate=0.0003,
+                 epsilon_decay=0.995, gamma=0.99, learning_rate=1e-3,
                  memory_size=50000, batch_size=64, target_update=500,
                  numTraining=100):
         
@@ -357,6 +357,7 @@ class DeepQLearningAgent(Agent):
             self.optimizer.step()
             
             self.losses.append(loss.item())
+            print(f"Loss: {loss.item():.2f}")
             
             # Update target network
             if self.steps % self.target_update == 0:
