@@ -165,11 +165,14 @@ class ApproximateQLearningAgent(Agent):
             data = pd.DataFrame()
             data['Scores'] = self.scores 
             data['Actions'] = self.actions
-            data['Weights'] = self.importance
             data['Rewards'] = self.rewards
+            importance_weights = self.importance
+            for i, weight in enumerate(importance_weights):
+                for key in weight:
+                    data[key] = [weight[key] for _ in range(len(data))]
 
             rewards = pd.DataFrame()
             rewards['rewards'] = self.rewards_window
             
-            data.to_excel('data_pacman.xlsx')
-            rewards.to_excel('rewards_pacman.xlsx')
+            data.to_excel('data_pacman_ApproximateQLearningAgent.xlsx')
+            rewards.to_excel('rewards_pacman_ApproximateQLearningAgent.xlsx')
