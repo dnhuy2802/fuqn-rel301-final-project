@@ -178,11 +178,22 @@ class ApproximateQLearningAgent(Agent):
                 for key in weight:
                     data[key] = [weight[key] for _ in range(len(data))]
 
-            rewards = pd.DataFrame()
-            rewards['rewards'] = self.rewards_window
+            # rewards = pd.DataFrame()
+            # rewards['rewards'] = self.rewards_window
             
-            data.to_excel('data_pacman_ApproximateQLearningAgent.xlsx')
-            rewards.to_excel('rewards_pacman_ApproximateQLearningAgent.xlsx')
+            data.to_excel('training_ApproximateQLearningAgent.xlsx')
+            # rewards.to_excel('rewards_pacman_ApproximateQLearningAgent.xlsx')
+        
+        if self.episodesSoFar > self.numTraining:
+            data = pd.DataFrame()
+            data['Scores'] = self.scores[self.numTraining:]
+            data['Actions'] = self.actions[self.numTraining:]
+            data['Rewards'] = self.rewards[self.numTraining:]
+            importance_weights = self.importance[self.numTraining:]
+            for i, weight in enumerate(importance_weights):
+                for key in weight:
+                    data[key] = [weight[key] for _ in range(len(data))]
+            data.to_excel('testing_ApproximateQLearningAgent.xlsx')
 
 
 class ReplayBuffer:
@@ -213,7 +224,7 @@ class DQN(nn.Module):
 
 class DeepQLearningAgent(Agent):
     def __init__(self, state_size=12, epsilon=1.0, epsilon_min=0.01,
-                 epsilon_decay=0.995, gamma=0.99, learning_rate=1e-3,
+                 epsilon_decay=0.995, gamma=0.99, learning_rate=0.1,
                  memory_size=50000, batch_size=64, target_update=500,
                  numTraining=100):
         
@@ -388,6 +399,24 @@ class DeepQLearningAgent(Agent):
             if self.rewards:
                 print(f"Average Score (last 10): {np.mean(self.rewards[-10:]):.2f}")
         
+        # Save rewards
         self.rewards.append(state.getScore())
+
+        # save rewards when training is done
+        if self.episodesSoFar == self.numTraining:
+            train_data = pd.DataFrame()
+            train_data['Rewards'] = self.rewards
+            # save weights
+            weights = self.q_network.state_dict()
+            for key in weights:
+                train_data[key] = [weights[key] for _ in range(len(train_data))]
+            train_data.to_excel('data_train_pacman_DeepQLearningAgent.xlsx')
+        
+        # save rewards when testing is done
+        if self.episodesSoFar > self.numTraining:
+            test_data = pd.DataFrame()
+            test_data['Rewards'] = self.rewards[self.numTraining:]
+            test_data.to_excel('data_test_pacman_DeepQLearningAgent.xlsx')
+
         self.lastState = None
         self.lastAction = None

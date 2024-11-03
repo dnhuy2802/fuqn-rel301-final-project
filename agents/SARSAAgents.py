@@ -175,5 +175,16 @@ class ApproximateSARSAAgent(Agent):
             rewards = pd.DataFrame()
             rewards['rewards'] = self.rewards_window
             
-            data.to_excel('data_pacman_sarsa.xlsx')
-            rewards.to_excel('rewards_pacman_sarsa.xlsx')
+            data.to_excel('training_ApproximateSARSAAgent.xlsx')
+            # rewards.to_excel('rewards_pacman_sarsa.xlsx')
+        
+        if self.episodesSoFar > self.numTraining:
+            data = pd.DataFrame()
+            data['Scores'] = self.scores[self.numTraining:]
+            data['Actions'] = self.actions[self.numTraining:]
+            data['Rewards'] = self.rewards[self.numTraining:]
+            importance_weights = self.importance[self.numTraining:]
+            for i, weight in enumerate(importance_weights):
+                for key in weight:
+                    data[key] = [weight[key] for _ in range(len(data))]
+            data.to_excel('testing_ApproximateSARSAAgent.xlsx')
