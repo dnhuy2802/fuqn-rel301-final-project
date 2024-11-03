@@ -42,6 +42,8 @@ from utilities.util import manhattanDistance
 from utilities import layout
 import sys, random, os
 
+import openpyxl
+from openpyxl import Workbook
 
 ###################################################
 # YOUR INTERFACE TO THE PACMAN WORLD: A GameState #
@@ -677,16 +679,35 @@ def runGames(layout, pacman, ghosts, display, numGames, record, numTraining=0,
             pickle.dump(components, f)
             f.close()
 
+    # Function to write results to Excel file
+    def write_results_to_excel(numTraining, avg_score, win_rate, file_path='results.xlsx'):
+        if not os.path.exists(file_path):
+            # Create a new workbook and add headers if the file does not exist
+            wb = Workbook()
+            ws = wb.active
+            ws.append(['Number of Training Games', 'Average Score', 'Average Win Rate'])
+        else:
+            # Load the existing workbook
+            wb = openpyxl.load_workbook(file_path)
+            ws = wb.active
+
+        # Append the new results
+        ws.append([numTraining, avg_score, win_rate])
+        wb.save(file_path)
+
+    # Existing code
     if (numGames - numTraining) > 0:
         scores = [game.state.getScore() for game in games]
         wins = [game.state.isWin() for game in games]
         winRate = wins.count(True) / float(len(wins))
-        print('Average Score:', sum(scores) / float(len(scores)))
+        avg_score = sum(scores) / float(len(scores))
+        print('Average Score:', avg_score)
         print('Scores:       ', ', '.join([str(score) for score in scores]))
         print('Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate))
         print('Record:       ', ', '.join([['Loss', 'Win'][int(w)] for w in wins]))
 
-    return games
+        # Write results to Excel file
+        write_results_to_excel(numTraining, avg_score, winRate)
 
 
 if __name__ == '__main__':
