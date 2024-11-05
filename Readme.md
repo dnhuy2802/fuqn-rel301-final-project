@@ -75,8 +75,9 @@ Ensure you have Python 3.x installed along with the required libraries. Install 
 -   **`-c` / `--catchExceptions`**: Enable exception handling and timeouts during games. Set as a flag. Default is `False`.
     
 -   **`--timeout`**: _(int)_ Maximum time (in seconds) an agent can spend computing in a single game. Default is `30`.
--   
+  
 **Example Commands**
+
 `python pacman.py -p ApproximateQLearningAgent -x 11 -n 10` 
 
 ## Algorithms Implemented
