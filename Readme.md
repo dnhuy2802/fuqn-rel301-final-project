@@ -2,6 +2,8 @@
 
 ## Project Overview
 
+![image](https://github.com/user-attachments/assets/16bcde1e-7ac5-4287-9177-d75193097e91)
+
 This project explores the application of **Reinforcement Learning (RL)** to train an AI agent for the classic **Pacman** game. By implementing RL techniques, the project aims to enable Pacman to navigate through the maze, collect pellets, avoid ghosts, and maximize its score, demonstrating the power and adaptability of RL in game environments.
 
 ## Course Information
