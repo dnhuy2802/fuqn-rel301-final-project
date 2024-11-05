@@ -1,0 +1,6 @@
+pygame
+pandas
+openpyxl
+torch
+matplotlib
+seaborn
